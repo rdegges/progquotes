@@ -120,7 +120,11 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
+    # Our web server:
     'gunicorn',
+
+    # Database migrations:
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
