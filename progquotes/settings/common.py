@@ -26,8 +26,12 @@ sys.path.append(normpath(join(DJANGO_ROOT, 'libs')))
 ########## END PATH CONFIGURATION
 
 
-DEBUG = True
+########## DEBUG CONFIGURATION
+# Disable debugging by default.
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+########## END DEBUG CONFIGURATION
+
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
