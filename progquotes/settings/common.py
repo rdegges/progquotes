@@ -1,4 +1,4 @@
-"""Project settings."""
+"""Common settings."""
 
 
 import sys
@@ -33,95 +33,97 @@ TEMPLATE_DEBUG = DEBUG
 ########## END DEBUG CONFIGURATION
 
 
+########## MANAGER CONFIGURATION
+# Admin and managers for this project. These people receive private site
+# alerts.
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Randall Degges', 'rdegges@gmail.com'),
 )
 
 MANAGERS = ADMINS
+########## END MANAGER CONFIGURATION
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
 
+########## GENERAL CONFIGURATION
 # Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# On Unix systems, a value of None will cause Django to use the same
-# timezone as the operating system.
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name although not all
+# choices may be available on all operating systems. On Unix systems, a value
+# of None will cause Django to use the same timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/Los_Angeles'
 
 # Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
+# http://www.i18nguy.com/unicode/language-identifiers.html.
 LANGUAGE_CODE = 'en-us'
 
+# The ID, as an integer, of the current site in the django_site database table.
+# This is used so that application data can hook into specific site(s) and a
+# single database can manage content for multiple sites.
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale
+# calendars according to the current locale.
 USE_L10N = True
+########## END GENERAL CONFIGURATION
 
+
+########## MEDIA CONFIGURATION
 # Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = normpath(join(DJANGO_ROOT, 'media'))
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+# URL that handles the media served from MEDIA_ROOT.
+MEDIA_URL = '/media/'
+########## END MEDIA CONFIGURATION
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+
+########## STATIC FILE CONFIGURATION
+# Absolute path to the directory static files should be collected to. Don't put
+# anything in this directory yourself; store your static files in apps' static/
+# subdirectories and in STATICFILES_DIRS.
+STATIC_ROOT = normpath(join(DJANGO_ROOT, 'static'))
 
 # URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
-# Make sure to use a trailing slash.
-# Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-# Additional locations of static files
+# Additional locations of static files.
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    normpath(join(DJANGO_ROOT, 'assets')),
 )
 
-# List of finder classes that know how to find static files in
-# various locations.
+# List of finder classes that know how to find static files in various
+# locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
+########## END STATIC FILE CONFIGURATION
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'xjbex-foc1hd&ex8s-1q8+rc4%7fk766#+7+lewaa*@8=vi+5q'
 
+########## TEMPLATE CONFIGURATION
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
+# Directories to search when loading templates.
+TEMPLATE_DIRS = (
+    normpath(join(DJANGO_ROOT, 'templates')),
+)
+########## END TEMPLATE CONFIGURATION
+
+
+########## MIDDLEWARE CONFIGURATION
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -129,15 +131,15 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
+########## END MIDDLEWARE CONFIGURATION
 
-ROOT_URLCONF = 'progquotes.urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+########## URL CONFIGURATION
+ROOT_URLCONF = '%s.urls' % SITE_NAME
+########## END URL CONFIGURATION
 
+
+########## APP CONFIGURATION
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -145,18 +147,21 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 
-    # Our web server:
-    'gunicorn',
+    # Admin panel and documentation.
+    'django.contrib.admin',
+    'django.contrib.admindocs',
 
-    # Database migrations:
+    # South migration tool.
     'south',
-)
 
+    # Web server.
+    'gunicorn',
+)
+########## END APP CONFIGURATION
+
+
+########## LOGGING CONFIGURATION
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error.
@@ -179,6 +184,7 @@ LOGGING = {
         },
     }
 }
+########## END LOGGING CONFIGURATION
 
 
 ########## HEROKU CONFIGURATION
