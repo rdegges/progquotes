@@ -16,9 +16,6 @@ SITE_NAME = basename(DJANGO_ROOT)
 # Absolute filesystem path to the top-level project folder.
 SITE_ROOT = dirname(DJANGO_ROOT)
 
-# Our secret key (set via environment variables).
-SECRET_KEY = environ['SECRET_KEY']
-
 # Add all necessary filesystem paths to our system path so that we can use
 # python import statements.
 sys.path.append(normpath(join(DJANGO_ROOT, 'apps')))
