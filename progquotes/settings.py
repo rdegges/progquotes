@@ -1,6 +1,30 @@
 """Project settings."""
 
 
+import sys
+from os.path import abspath, basename, dirname, environ, join, normpath
+
+
+########## PATH CONFIGURATION
+# Absolute filesystem path to the Django project directory.
+DJANGO_ROOT = dirname(abspath(__file__))
+
+# Site name.
+SITE_NAME = basename(DJANGO_ROOT)
+
+# Absolute filesystem path to the top-level project folder.
+SITE_ROOT = dirname(DJANGO_ROOT)
+
+# Our secret key (set via environment variables).
+SECRET_KEY = environ['SECRET_KEY']
+
+# Add all necessary filesystem paths to our system path so that we can use
+# python import statements.
+sys.path.append(normpath(join(DJANGO_ROOT, 'apps')))
+sys.path.append(normpath(join(DJANGO_ROOT, 'libs')))
+########## END PATH CONFIGURATION
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
