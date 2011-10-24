@@ -206,3 +206,9 @@ try:
 except:
     print "Unexpected error:", sys.exc_info()
 ########## END HEROKU CONFIGURATION
+
+
+########## SECRET CONFIGURATION
+# Our secret key.
+SECRET_KEY = 'gliA6NBLL9q80TjZHrmng8SVR4biuLHTlfGWuZorSO6roCOKqFGAZD7uLoKQY80XYt3yg6dda1Hvcm3B'
+########## END SECRET CONFIGURATION
