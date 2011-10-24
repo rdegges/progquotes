@@ -2,7 +2,6 @@
 
 
 import sys
-from os import environ
 from os.path import abspath, basename, dirname, join, normpath
 
 
