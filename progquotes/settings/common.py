@@ -17,6 +17,7 @@ SITE_ROOT = dirname(DJANGO_ROOT)
 
 # Add all necessary filesystem paths to our system path so that we can use
 # python import statements.
+sys.path.append(SITE_ROOT)
 sys.path.append(normpath(join(DJANGO_ROOT, 'apps')))
 sys.path.append(normpath(join(DJANGO_ROOT, 'libs')))
 ########## END PATH CONFIGURATION
