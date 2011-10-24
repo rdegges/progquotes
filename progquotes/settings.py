@@ -1,4 +1,5 @@
-# Django settings for progquotes project.
+"""Project settings."""
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
