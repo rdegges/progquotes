@@ -2,7 +2,8 @@
 
 
 import sys
-from os.path import abspath, basename, dirname, environ, join, normpath
+from os import environ
+from os.path import abspath, basename, dirname, join, normpath
 
 
 ########## PATH CONFIGURATION
