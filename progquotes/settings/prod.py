@@ -1,62 +1,104 @@
-"""Production settings."""
+"""Production settings and globals."""
 
 
 from os import environ
+from sys import exc_info
+from urlparse import urlparse
+
+from S3 import CallingFormat
 
 from common import *
 
 
 ########## EMAIL CONFIGURATION
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
-EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
-EMAIL_PORT = 587
-EMAIL_SUBJECT_PREFIX = '[%s]' % SITE_NAME
-EMAIL_USE_TLS = False
-SERVER_EMAIL = environ['EMAIL_HOST_USER']
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-host
+EMAIL_HOST = environ.get('EMAIL_HOST', 'smtp.gmail.com')
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-host-password
+EMAIL_HOST_PASSWORD = environ.get('EMAIL_HOST_PASSWORD', '')
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-host-user
+EMAIL_HOST_USER = environ.get('EMAIL_HOST_USER', 'your_email@example.com')
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-port
+EMAIL_PORT = environ.get('EMAIL_PORT', 587)
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-subject-prefix
+EMAIL_SUBJECT_PREFIX = '[%s] ' % SITE_NAME
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#email-use-tls
+EMAIL_USE_TLS = True
+
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#server-email
+SERVER_EMAIL = EMAIL_HOST_USER
 ########## END EMAIL CONFIGURATION
 
 
-########## SECRET CONFIGURATION
-# Our secret key.
-SECRET_KEY = environ['SECRET_KEY']
-########## END SECRET CONFIGURATION
+########## DATABASE CONFIGURATION
+# See: http://devcenter.heroku.com/articles/django#postgres_database_config
+try:
+    url = urlparse(environ['DATABASE_URL'])
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': url.path[1:],
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname,
+        'PORT': url.port,
+    }
+except:
+    print 'Unexpected error:', exc_info()
+########## END DATABASE CONFIGURATION
 
 
 ########## CACHE CONFIGURATION
+# See: https://docs.djangoproject.com/en/1.3/ref/settings/#caches
 CACHES = {
-    # Memcached cache. See
-    # http://docs.djangoproject.com/en/1.3/topics/cache/#memcached for more
-    # information.
     'default': {
-       'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-       'LOCATION': environ['MEMCACHE_SERVERS'] + ':11211',
+        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+        'LOCATION': 'localhost:11211',
+        'TIMEOUT': 500,
+        'BINARY': True,
+        'OPTIONS': {
+            'tcp_nodelay': True,
+            'ketama': True,
+        }
     }
 }
 ########## END CACHE CONFIGURATION
 
 
-########## HEROKU CONFIGURATION
-import os, sys, urlparse
+########## STORAGE CONFIGURATION
+# See: http://django-storages.readthedocs.org/en/latest/index.html
+INSTALLED_APPS += (
+    'storages',
+)
 
-urlparse.uses_netloc.append('postgres')
-urlparse.uses_netloc.append('mysql')
+# See: http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-try:
-    if os.environ.has_key('DATABASE_URL'):
-        url = urlparse.urlparse(os.environ['DATABASE_URL'])
-        DATABASES['default'] = {
-            'NAME':     url.path[1:],
-            'USER':     url.username,
-            'PASSWORD': url.password,
-            'HOST':     url.hostname,
-            'PORT':     url.port,
-        }
-        if url.scheme == 'postgres':
-            DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
-        if url.scheme == 'mysql':
-            DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
-except:
-    print "Unexpected error:", sys.exc_info()
-########## END HEROKU CONFIGURATION
+AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
+
+AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID', '')
+AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY', '')
+AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME', '')
+
+STATIC_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
+########## END STORAGE CONFIGURATION
+
+
+########## WEBSERVER CONFIGURATION
+# See: http://gunicorn.org/
+INSTALLED_APPS += (
+    'gunicorn',
+)
+########## END WEBSERVER CONFIGURATION
+
+
+########## SECRET KEY CONFIGURATION
+SECRET_KEY = environ.get('SECRET_KEY', '')
+########## END SECRET KEY CONFIGURATION
