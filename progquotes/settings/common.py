@@ -216,5 +216,5 @@ CACHE_COUNT_TIMEOUT = 60 * 60
 
 ########## AUTH CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.3/ref/settings/#login-url
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 ########## END AUTH CONFIGURATION
