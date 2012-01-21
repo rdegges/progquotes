@@ -19,3 +19,6 @@ class Quote(CachingMixin, models.Model):
     submitted = models.DateTimeField(editable=False)
     submitted_by = models.EmailField()
     updated = models.DateTimeField(editable=False)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.body, self.author)
