@@ -9,3 +9,13 @@ class Quote(CachingMixin, models.Model):
     All fields are optional (except for the quote body, of course).
     """
     objects = CachingManager()
+
+    approved = models.BooleanField(default=False)
+    author = models.CharField(blank=True, max_length=255)
+    body = models.TextField()
+    date = models.DateField(blank=True, null=True)
+    slug = models.SlugField(primary_key=True)
+    source = models.TextField(blank=True)
+    submitted = models.DateTimeField(editable=False)
+    submitted_by = models.EmailField()
+    updated = models.DateTimeField(editable=False)
